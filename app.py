@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, send_file, make_response
 import pandas as pd
+import numpy as np
+from fuzzywuzzy import fuzz
+from scipy import stats
 
 app = Flask(__name__)
 df = pd.DataFrame()
@@ -10,7 +13,7 @@ def index():
 
 @app.route('/data-cleaning', methods=['GET', 'POST'])
 def data_cleaning():
-    global df 
+    global df
 
     if request.method == 'POST':
         file = request.files['file']
@@ -30,8 +33,11 @@ def data_cleaning():
                     df = clean_multivariate_dataset(df)
                 elif dataset_type == 'Categorical':
                     df = clean_categorical_dataset(df)
+                    df = fix_typos(df)  # Fix typos in categorical data
                 elif dataset_type == 'Correlation':
                     df = clean_correlation_dataset(df)
+                else:
+                    return render_template('data_cleaning.html', error_message='Unknown dataset type')
 
                 # Generate statistics
                 initial_rows = df.shape[0]
@@ -85,6 +91,8 @@ def detect_dataset_type(df):
 
 def clean_numerical_dataset(df):
     # Additional cleaning operations for Numerical dataset
+    z_scores = np.abs(stats.zscore(df.select_dtypes(include=['float64', 'int64'])))
+    df = df[(z_scores < 3).all(axis=1)]
     return df
 
 def clean_bivariate_dataset(df):
@@ -103,6 +111,17 @@ def clean_correlation_dataset(df):
     # Additional cleaning operations for Correlation dataset
     return df
 
+def fix_typos(df):
+    # Additional cleaning operation for fixing typos in Categorical dataset
+    threshold = 80 
+    for col in df.select_dtypes(include=['object']):
+        unique_values = df[col].unique()
+        for value in unique_values:
+            matches = fuzzy_process.extractBests(value, unique_values, scorer=fuzz.ratio, score_cutoff=threshold)
+            if len(matches) > 1:
+                replacements = [match[0] for match in matches]
+                df[col].replace(replacements, value, inplace=True)
+    return df
+
 if __name__ == '__main__':
     app.run(debug=True)
-
