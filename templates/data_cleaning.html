@@ -2,6 +2,21 @@
 <html>
 <head>
     <title>Data Cleaning</title>
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .button-container button {
+            margin-right: 10px;
+        }
+        
+        .data-section {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Data Cleaning</h1>
@@ -9,25 +24,29 @@
     {% if error_message %}
         <p>{{ error_message }}</p>
     {% else %}
-        {% if cleaned_data %}
-            <h2>Cleaned Data</h2>
-            {{ cleaned_data|safe }}
-            
-            <h2>Statistics</h2>
-            <p>Rows dropped: {{ statistics['rows_dropped'] }}</p>
-            <p>Percentage of rows dropped: {{ statistics['percentage_rows_dropped'] }}%</p>
-            
-            <form method="get" action="/download">
-                <button type="submit">Download Cleaned Data</button>
-            </form>
-        {% else %}
-            <form method="post" enctype="multipart/form-data">
-                <input type="file" name="file" accept=".csv">
-                <input type="submit" value="Clean Data">
-            </form>
-        {% endif %}
+        <div class="data-section">
+            {% if cleaned_data %}
+                <h2>Statistics</h2>
+                <p>Rows dropped: {{ statistics['rows_dropped'] }}</p>
+                <p>Percentage of rows dropped: {{ statistics['percentage_rows_dropped'] }}%</p>
+                
+                <form method="get" action="/download">
+                    <button type="submit">Download Cleaned Data</button>
+                </form>
+                
+                <h2>Cleaned Data</h2>
+                {{ cleaned_data|safe }}
+            {% else %}
+                <form method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" accept=".csv">
+                    
+                    <div class="button-container">
+                        <input type="submit" value="Clean Data">
+                        <a href="/" style="margin-left: 10px;">Back to Home</a>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
     {% endif %}
-    
-    <a href="/">Back to Home</a>
 </body>
 </html>

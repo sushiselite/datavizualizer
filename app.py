@@ -64,5 +64,9 @@ def download():
 
     return response
 
+@app.route('/data-analysis')
+def data_analysis():
+    return render_template('data_analysis.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
