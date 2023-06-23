@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, send_file, make_response
 import pandas as pd
 import numpy as np
-from fuzzywuzzy import fuzz
 from scipy import stats
+import re
 
 app = Flask(__name__)
 df = pd.DataFrame()
@@ -111,17 +111,7 @@ def clean_correlation_dataset(df):
     # Additional cleaning operations for Correlation dataset
     return df
 
-def fix_typos(df):
-    # Additional cleaning operation for fixing typos in Categorical dataset
-    threshold = 80 
-    for col in df.select_dtypes(include=['object']):
-        unique_values = df[col].unique()
-        for value in unique_values:
-            matches = fuzzy_process.extractBests(value, unique_values, scorer=fuzz.ratio, score_cutoff=threshold)
-            if len(matches) > 1:
-                replacements = [match[0] for match in matches]
-                df[col].replace(replacements, value, inplace=True)
-    return df
+import re
 
 if __name__ == '__main__':
     app.run(debug=True)
