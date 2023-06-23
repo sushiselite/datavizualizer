@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, send_file, make_response
+from flask import Flask, render_template, request, send_file, make_response, flash
 import pandas as pd
-from sklearn import preprocessing
 import numpy as np
 from scipy import stats
-import lux
+import plotly.express as px
+import time
 
 app = Flask(__name__)
+app.secret_key = 'supersecretkey'  # needed for flashing messages
 df = pd.DataFrame()
 
 @app.route('/')
@@ -60,34 +61,36 @@ def data_cleaning():
 
 @app.route('/data-analysis', methods=['GET', 'POST'])
 def data_analysis():
-    global df
     if request.method == 'POST':
         file = request.files.get('file')
         if file:
             try:
+                start_time = time.time()
                 df = pd.read_csv(file.stream)
-                
-                # Perform data analysis using Lux
-                lux_df = lux.LuxDataFrame(df)
-                lux_df.set_intent([])
-                return render_template('data_analysis.html', lux_data=lux_df.to_dict())
+                print(f"Time taken to read file: {time.time() - start_time} seconds")
+
+                max_rows = 1000
+                if df.shape[0] > max_rows:
+                    flash(f'File is too large, only processing the first {max_rows} rows')
+                    df = df.head(max_rows)
+
+                plots = []
+                numerical_columns = df.select_dtypes(include=[np.number]).columns
+                for col in numerical_columns[:2]:
+                    print(f"Generating histogram for {col}")  # Logging
+                    start_time = time.time()
+                    fig = px.histogram(df, x=col)
+                    plot_html = fig.to_html(full_html=False)
+                    plots.append(plot_html)
+                    print(f"Time taken for {col}: {time.time() - start_time} seconds")
+
+                return render_template('data_analysis.html', plots=plots)
             except Exception as e:
                 error_message = f"Error occurred during data analysis: {str(e)}"
+                flash(error_message)
                 return render_template('data_analysis.html', error_message=error_message)
-    
-    if df.empty:
-        error_message = "No data available for analysis. Please upload a dataset and perform cleaning first."
-        return render_template('data_analysis.html', error_message=error_message)
-    else:
-        try:
-            lux_df = lux.LuxDataFrame(df)
-            lux_df.set_intent([])
-            return render_template('data_analysis.html', lux_data=lux_df.to_dict())
-        except Exception as e:
-            error_message = f"Error occurred during data analysis: {str(e)}"
-            return render_template('data_analysis.html', error_message=error_message)
 
-
+    return render_template('data_analysis.html')
 
 @app.route('/download')
 def download():
