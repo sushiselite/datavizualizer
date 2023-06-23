@@ -1,53 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Data Cleaning</title>
-    <style>
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        
-        .button-container button {
-            margin-right: 10px;
-        }
-        
-        .data-section {
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body>
-    <h1>Data Cleaning</h1>
+    <h1>Data Cleaning Options</h1>
     
+    <!-- The form for data cleaning options -->
+    <form action="{{ url_for('data_cleaning') }}" method="post" enctype="multipart/form-data">
+        <h3>Upload Dataset:</h3>
+        <input type="file" name="file" accept=".csv"><br><br>
+        
+        <h3>Select Data Cleaning Operations:</h3>
+        <input type="checkbox" id="handle_missing_values" name="handle_missing_values">
+        <label for="handle_missing_values">Handle Missing Values</label><br>
+        
+        <input type="checkbox" id="drop_duplicates" name="drop_duplicates">
+        <label for="drop_duplicates">Drop Duplicates</label><br>
+        
+        <input type="checkbox" id="normalize_data" name="normalize_data">
+        <label for="normalize_data">Normalize Data</label><br>
+        
+        <input type="checkbox" id="encode_categorical" name="encode_categorical">
+        <label for="encode_categorical">Encode Categorical Values</label><br>
+        
+        <input type="checkbox" id="filter_outliers" name="filter_outliers">
+        <label for="filter_outliers">Filter Outliers</label><br>
+        
+        <input type="submit" value="Upload and Clean Data">
+    </form>
+    
+    <!-- The table for cleaned data -->
+    {% if cleaned_data %}
+        <h3>Cleaned Data:</h3>
+        {{ cleaned_data|safe }}
+        <br>
+        {{ download_link|safe }}
+    {% endif %}
+    
+    <!-- Display error message if any -->
     {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% else %}
-        <div class="data-section">
-            {% if cleaned_data %}
-                <h2>Statistics</h2>
-                <p>Rows dropped: {{ statistics['rows_dropped'] }}</p>
-                <p>Percentage of rows dropped: {{ statistics['percentage_rows_dropped'] }}%</p>
-                <p>Dataset Type: {{ dataset_type }}</p>
-                
-                <form method="get" action="/download">
-                    <button type="submit">Download Cleaned Data</button>
-                </form>
-                
-                <h2>Cleaned Data</h2>
-                {{ cleaned_data|safe }}
-            {% else %}
-                <form method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" accept=".csv">
-                    
-                    <div class="button-container">
-                        <input type="submit" value="Clean Data">
-                        <a href="/" style="margin-left: 10px;">Back to Home</a>
-                    </div>
-                </form>
-            {% endif %}
-        </div>
+        <p style="color: red;">{{ error_message }}</p>
     {% endif %}
 </body>
 </html>

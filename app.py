@@ -1,5 +1,9 @@
 from flask import Flask, render_template, request, send_file, make_response
 import pandas as pd
+from sklearn import preprocessing
+import numpy as np
+from scipy import stats
+import lux
 
 app = Flask(__name__)
 df = pd.DataFrame()
@@ -12,31 +16,78 @@ def index():
 def data_cleaning():
     global df
     if request.method == 'POST':
-        file = request.files['file']
+        file = request.files.get('file')
         if file:
             try:
                 df = pd.read_csv(file.stream)
+                
+                # Get user choices
+                handle_missing_values = request.form.get('handle_missing_values') == 'on'
+                drop_duplicates = request.form.get('drop_duplicates') == 'on'
+                normalize_data = request.form.get('normalize_data') == 'on'
+                encode_categorical = request.form.get('encode_categorical') == 'on'
+                filter_outliers = request.form.get('filter_outliers') == 'on'
 
-                dataset_type = detect_dataset_type(df)
-                # Generate statistics
-                initial_rows = df.shape[0]
-                cleaned_df = df.dropna().drop_duplicates()
-                cleaned_rows = initial_rows - cleaned_df.shape[0]
-                percentage_rows_dropped = (cleaned_rows / initial_rows) * 100 if initial_rows > 0 else 0
+                # Handling missing values
+                if handle_missing_values:
+                    df = df.fillna(method='ffill')
+                
+                # Dropping duplicates
+                if drop_duplicates:
+                    df = df.drop_duplicates()
+
+                # Normalizing data
+                if normalize_data:
+                    min_max_scaler = preprocessing.MinMaxScaler()
+                    df = pd.DataFrame(min_max_scaler.fit_transform(df), columns=df.columns)
+
+                # Encoding categorical values
+                if encode_categorical:
+                    df = pd.get_dummies(df)
+
+                # Filtering outliers using Z-score
+                if filter_outliers:
+                    df = df[(np.abs(stats.zscore(df.select_dtypes(include=[np.number]))) < 3).all(axis=1)]
 
                 # Create a download link for the cleaned data
                 cleaned_data_download_link = f'<a href="/download">Download Cleaned Data</a>'
                 
-                # Pass the cleaned data, dataset type, and statistics to the template
-                return render_template('data_cleaning.html', cleaned_data=cleaned_df.to_html(index=False),
-                                       dataset_type=dataset_type,
-                                       statistics={'rows_dropped': cleaned_rows,
-                                                   'percentage_rows_dropped': percentage_rows_dropped},
-                                       download_link=cleaned_data_download_link)
+                return render_template('data_cleaning.html', cleaned_data=df.to_html(index=False), download_link=cleaned_data_download_link)
             except Exception as e:
                 error_message = f"Error occurred: {str(e)}"
                 return render_template('data_cleaning.html', error_message=error_message)
     return render_template('data_cleaning.html')
+
+@app.route('/data-analysis', methods=['GET', 'POST'])
+def data_analysis():
+    global df
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file:
+            try:
+                df = pd.read_csv(file.stream)
+                
+                # Perform data analysis using Lux
+                lux_df = lux.LuxDataFrame(df)
+                lux_df.set_intent([])
+                return render_template('data_analysis.html', lux_data=lux_df.to_dict())
+            except Exception as e:
+                error_message = f"Error occurred during data analysis: {str(e)}"
+                return render_template('data_analysis.html', error_message=error_message)
+    
+    if df.empty:
+        error_message = "No data available for analysis. Please upload a dataset and perform cleaning first."
+        return render_template('data_analysis.html', error_message=error_message)
+    else:
+        try:
+            lux_df = lux.LuxDataFrame(df)
+            lux_df.set_intent([])
+            return render_template('data_analysis.html', lux_data=lux_df.to_dict())
+        except Exception as e:
+            error_message = f"Error occurred during data analysis: {str(e)}"
+            return render_template('data_analysis.html', error_message=error_message)
+
+
 
 @app.route('/download')
 def download():
@@ -47,21 +98,6 @@ def download():
     response.headers.set('Content-Type', 'text/csv')
     response.headers.set('Content-Disposition', 'attachment', filename='cleaned_data.csv')
     return response
-
-def detect_dataset_type(df):
-    # Identify dataset type based on the characteristics of the DataFrame
-    if all(df.dtypes.isin(['int64', 'float64'])):
-        return 'Numerical'
-    elif len(df.columns) == 2 and all(df.apply(lambda col: len(col.unique()) == 2)):
-        return 'Bivariate'
-    elif len(df.columns) > 2 and df.dtypes.nunique() > 1:
-        return 'Multivariate'
-    elif any(df.dtypes == 'object'):
-        return 'Categorical'
-    elif any(df.dtypes.isin(['int64', 'float64'])):
-        return 'Correlation'
-    else:
-        return 'Unknown'
 
 if __name__ == '__main__':
     app.run(debug=True)

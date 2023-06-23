@@ -2,11 +2,42 @@
 <html>
 <head>
     <title>Data Analysis</title>
+    <style>
+        /* Add your custom styles here */
+    </style>
 </head>
 <body>
     <h1>Data Analysis</h1>
-    <p>Coming Soon!</p>
-    
-    <a href="/">Back to Home</a>
+
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% else %}
+        <div id="lux-display"></div>
+    {% endif %}
+
+    <form action="/data-analysis" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload Dataset">
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/lux-api/build/lux.js"></script>
+    <script>
+        const luxData = {{ lux_data | safe }};
+        lux
+            .init()
+            .then(() => {
+                lux
+                    .create(luxData)
+                    .then((result) => {
+                        result.export('lux-display');
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    </script>
 </body>
 </html>
