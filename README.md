@@ -5,13 +5,14 @@ It currently supports very basic functionality and is a work in progress. Feel f
 
 It currently is not being hosted anywhere. To run it and test it yourself:
 
-1. Clone the repository by running:
+1. Download the latest tag from the 'releases' section.
+   Alternatively, clone the repository by running:
    ```https://github.com/sushiselite/datavizualizer.git```
 
-2. Install necessary dependencies: (in a virtual environment - optional)
+3. Install necessary dependencies: (in a virtual environment - optional)
    ```pip install requirements.txt```
 
-3. Use terminal to start dev server at localhost:5000:
+4. Use your terminal to start dev server at localhost:5000:
    ```python app.py```
 
 Important things to do:
