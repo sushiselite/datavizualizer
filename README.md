@@ -1,9 +1,9 @@
 # datavizualizer
-Open source webapp that currently allows users to interactively clean their dataset and generate visuals for their data. (Limited Functionality)
+Open source webapp that currently allows users to interactively clean their dataset and generate visuals for their data. (Limited Functionality and prone to bugs)
 
-It currently supports very basic functionality and is a work in progress. Feel free to add suggestions through the 'Issues' tab.
+It currently supports very basic functionality and is a work in progress. Feel free to add suggestions and tell me about bugs through the 'Issues' tab.
 
-It currently is not being hosted anywhere. To run it and test it yourself:
+It currently is not being hosted anywhere yet. To run it and test it yourself:
 
 1. Download the latest tag from the [releases](https://github.com/sushiselite/datavizualizer/releases) section.
    
@@ -24,6 +24,7 @@ It currently is not being hosted anywhere. To run it and test it yourself:
 Allow users to choose columns using interactive menu (need to figure out whether client side or server side implementation for future free hosting)
 Add d3.js/matplotlib as an option to plot with alongside plotly
 More interactive dataset features such as sampling by selecting rows/columns on website
+Add compatibility with more file types (Current support: CSV)
 Better UX
 Dark mode toggle?
 
