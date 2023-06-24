@@ -5,7 +5,7 @@ It currently supports very basic functionality and is a work in progress. Feel f
 
 It currently is not being hosted anywhere. To run it and test it yourself:
 
-1. Download the latest tag from the 'releases' section.
+1. Download the latest tag from the ['releases'](https://github.com/sushiselite/datavizualizer/releases) section.
    
    Alternatively, clone the repository by running:
    
