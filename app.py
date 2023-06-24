@@ -4,6 +4,7 @@ import numpy as np
 from scipy import stats
 import plotly.express as px
 import time
+from sklearn import preprocessing
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # needed for flashing messages
