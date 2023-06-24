@@ -18,3 +18,16 @@ It currently is not being hosted anywhere. To run it and test it yourself:
 5. Use your terminal to start dev server at localhost:5000 using
    
    ```python app.py```
+
+#Screenshots:
+
+Landing Page:
+https://github.com/sushiselite/datavizualizer/blob/main/images/index.png
+
+Data Cleaning:
+https://github.com/sushiselite/datavizualizer/blob/main/images/clean1.png
+https://github.com/sushiselite/datavizualizer/blob/main/images/clean2.png
+
+Visualization and Summary:
+https://github.com/sushiselite/datavizualizer/blob/main/images/data1.png
+https://github.com/sushiselite/datavizualizer/blob/main/images/data2.png
