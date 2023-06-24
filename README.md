@@ -12,7 +12,7 @@ It currently is not being hosted anywhere. To run it and test it yourself:
 3. Install necessary dependencies: (in a virtual environment - optional)
    ```pip install requirements.txt```
 
-4. Use your terminal to start dev server at localhost:5000 :
+4. Use your terminal to start dev server at localhost:5000 using:
    ```python app.py```
 
 Important things to do:
