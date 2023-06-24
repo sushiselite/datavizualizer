@@ -19,6 +19,14 @@ It currently is not being hosted anywhere. To run it and test it yourself:
    
    ```python app.py```
 
+# To-Do List (Regularly updated)
+
+Allow users to choose columns using interactive menu (need to figure out whether client side or server side implementation for future free hosting)
+Add d3.js/matplotlib as an option to plot with alongside plotly
+More interactive dataset features such as sampling by selecting rows/columns on website
+Better UX
+Dark mode toggle?
+
 # Screenshots:
 
 Landing Page:
