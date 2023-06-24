@@ -17,4 +17,4 @@ It currently is not being hosted anywhere. To run it and test it yourself:
 Important things to do:
 1. Change file structure
 2. Alow users to select columns to generate visuals for
-3. Support larger datasets (current support is up to 1000 rows to prevent crashes)
+3. Support larger datasets (current support is up to 1000 rows to prevent crashes) ✅
