@@ -19,7 +19,7 @@ It currently is not being hosted anywhere. To run it and test it yourself:
    
    ```python app.py```
 
-#Screenshots:
+# Screenshots:
 
 Landing Page:
 ![alt text](https://github.com/sushiselite/datavizualizer/blob/main/images/index.png?raw=true)
