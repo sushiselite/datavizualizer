@@ -29,6 +29,15 @@
     
     <form id="upload-form" action="{{ url_for('data_analysis') }}" method="POST" enctype="multipart/form-data">
         <input type="file" name="file" accept=".csv, .xlsx">
+        <label for="plot_type">Plot Type:</label>
+        <select id="plot_type" name="plot_type">
+            <option value="histogram">Histogram</option>
+            <option value="bar">Bar Chart</option>
+            <option value="pie">Pie Chart</option>
+            <option value="scatter">Scatter Plot</option>
+            <option value="line">Line Graph</option>
+            <option value="boxplot">Boxplot</option>
+        </select>
         <button type="submit">Upload and Analyze</button>
         {% if error_message %}
             <p>{{ error_message }}</p>
@@ -39,7 +48,9 @@
 
     {% if plots %}
         {% for plot in plots %}
-            {{ plot|safe }}
+            <div>
+                {{ plot|safe }}
+            </div>
         {% endfor %}
     {% endif %}
 

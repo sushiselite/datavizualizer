@@ -21,7 +21,7 @@ def data_cleaning():
         if file:
             try:
                 df = pd.read_csv(file.stream)
-                
+
                 # Get user choices
                 handle_missing_values = request.form.get('handle_missing_values') == 'on'
                 drop_duplicates = request.form.get('drop_duplicates') == 'on'
@@ -32,7 +32,7 @@ def data_cleaning():
                 # Handling missing values
                 if handle_missing_values:
                     df = df.fillna(method='ffill')
-                
+
                 # Dropping duplicates
                 if drop_duplicates:
                     df = df.drop_duplicates()
@@ -52,7 +52,7 @@ def data_cleaning():
 
                 # Create a download link for the cleaned data
                 cleaned_data_download_link = f'<a href="/download">Download Cleaned Data</a>'
-                
+
                 return render_template('data_cleaning.html', cleaned_data=df.to_html(index=False), download_link=cleaned_data_download_link)
             except Exception as e:
                 error_message = f"Error occurred: {str(e)}"
@@ -76,13 +76,56 @@ def data_analysis():
 
                 plots = []
                 numerical_columns = df.select_dtypes(include=[np.number]).columns
-                for col in numerical_columns[:2]:
-                    print(f"Generating histogram for {col}")  # Logging
-                    start_time = time.time()
-                    fig = px.histogram(df, x=col)
-                    plot_html = fig.to_html(full_html=False)
-                    plots.append(plot_html)
-                    print(f"Time taken for {col}: {time.time() - start_time} seconds")
+
+                plot_type = request.form.get('plot_type')
+                if plot_type == 'histogram':
+                    for col in numerical_columns[:2]:
+                        print(f"Generating histogram for {col}")  # Logging
+                        start_time = time.time()
+                        fig = px.histogram(df, x=col)
+                        plot_html = fig.to_html(full_html=False)
+                        plots.append(plot_html)
+                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
+                elif plot_type == 'bar':
+                    for col in numerical_columns[:2]:
+                        print(f"Generating bar chart for {col}")  # Logging
+                        start_time = time.time()
+                        fig = px.bar(df, x=col)
+                        plot_html = fig.to_html(full_html=False)
+                        plots.append(plot_html)
+                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
+                elif plot_type == 'pie':
+                    for col in numerical_columns[:2]:
+                        print(f"Generating pie chart for {col}")  # Logging
+                        start_time = time.time()
+                        fig = px.pie(df, values=col)
+                        plot_html = fig.to_html(full_html=False)
+                        plots.append(plot_html)
+                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
+                elif plot_type == 'scatter':
+                    for col in numerical_columns[:2]:
+                        print(f"Generating scatter plot for {col}")  # Logging
+                        start_time = time.time()
+                        fig = px.scatter(df, x=col, y=numerical_columns[2])
+                        plot_html = fig.to_html(full_html=False)
+                        plots.append(plot_html)
+                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
+                elif plot_type == 'line':
+                    for col in numerical_columns[:2]:
+                        print(f"Generating line graph for {col}")  # Logging
+                        start_time = time.time()
+                        fig = px.line(df, x=col, y=numerical_columns[2])
+                        plot_html = fig.to_html(full_html=False)
+                        plots.append(plot_html)
+                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
+                elif plot_type == 'boxplot':
+                    for col in numerical_columns[:2]:
+                        print(f"Generating boxplot for {col}")  # Logging
+                        start_time = time.time()
+                        fig = px.box(df, y=col)
+                        plot_html = fig.to_html(full_html=False)
+                        plots.append(plot_html)
+                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
 
                 return render_template('data_analysis.html', plots=plots)
             except Exception as e:
