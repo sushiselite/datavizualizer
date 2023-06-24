@@ -18,8 +18,3 @@ It currently is not being hosted anywhere. To run it and test it yourself:
 5. Use your terminal to start dev server at localhost:5000 using
    
    ```python app.py```
-
-Important things to do:
-1. Change file structure ✅
-2. Alow users to select columns to generate visuals for
-3. Support larger datasets (current support is up to 1000 rows to prevent crashes) ✅
