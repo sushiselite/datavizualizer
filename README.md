@@ -22,7 +22,7 @@ It currently is not being hosted anywhere. To run it and test it yourself:
 #Screenshots:
 
 Landing Page:
-https://github.com/sushiselite/datavizualizer/blob/main/images/index.png?raw=true
+![alt text]https://github.com/sushiselite/datavizualizer/blob/main/images/index.png?raw=true
 
 Data Cleaning:
 https://github.com/sushiselite/datavizualizer/blob/main/images/clean1.png
