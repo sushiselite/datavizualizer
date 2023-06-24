@@ -25,9 +25,9 @@ Landing Page:
 ![alt text](https://github.com/sushiselite/datavizualizer/blob/main/images/index.png?raw=true)
 
 Data Cleaning:
-https://github.com/sushiselite/datavizualizer/blob/main/images/clean1.png
-https://github.com/sushiselite/datavizualizer/blob/main/images/clean2.png
+![alt text](https://github.com/sushiselite/datavizualizer/blob/main/images/clean1.png?raw=true)
+![alt text](https://github.com/sushiselite/datavizualizer/blob/main/images/clean2.png?raw=true)
 
 Visualization and Summary:
-https://github.com/sushiselite/datavizualizer/blob/main/images/data1.png
-https://github.com/sushiselite/datavizualizer/blob/main/images/data2.png
+![alt text](https://github.com/sushiselite/datavizualizer/blob/main/images/data1.png?raw=true)
+![alt text](https://github.com/sushiselite/datavizualizer/blob/main/images/data2.png?raw=true)
