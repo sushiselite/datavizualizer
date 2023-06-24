@@ -7,6 +7,11 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
         h1 {
@@ -43,6 +48,18 @@
             background-color: #333;
             color: #fff;
         }
+
+        .gif-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .gif-container iframe {
+            max-width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -54,5 +71,10 @@
         <li><a href="/data-cleaning">Data Cleaning</a></li>
         <li><a href="/data-analysis">Data Analysis</a></li>
     </ul>
+
+    <div class="gif-container">
+        <iframe src="https://giphy.com/embed/IoRBXUlynTBL7sy7y8" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    </div>
+
 </body>
 </html>
