@@ -6,7 +6,7 @@ from plotting import plotting
 import numpy as np
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'
+app.secret_key = 'supersecretkey' #for flash messages
 df = pd.DataFrame()
 
 @app.route('/')
