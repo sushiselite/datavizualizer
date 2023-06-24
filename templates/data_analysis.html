@@ -3,19 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <title>Data Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
         }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+        }
+
+        a:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        select {
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            padding: 5px 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #666;
+        }
+
+        p#error-message {
+            text-align: center;
+            color: #ff0000;
+        }
+
         #loading-message {
+            text-align: center;
             display: none;
+        }
+
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <button onclick="window.history.back();">Back</button>
-
     <h1>Data Analysis</h1>
     
     <!-- Display flash messages -->
@@ -45,7 +127,7 @@
         </select>
         <button type="submit">Upload and Analyze</button>
         {% if error_message %}
-            <p>{{ error_message }}</p>
+            <p id="error-message">{{ error_message }}</p>
         {% endif %}
     </form>
 
@@ -90,6 +172,28 @@
         document.getElementById("upload-form").addEventListener("submit", function() {
             document.getElementById("loading-message").style.display = "block";
         });
+    </script>
+
+    <script>
+        // Adjust Plotly scatter matrix configuration
+        var scatterMatrix = document.getElementById("scatter-matrix");
+        if (scatterMatrix) {
+            var config = scatterMatrix.layout;
+            config.yaxis.tickangle = -90;
+            Plotly.newPlot(scatterMatrix, scatterMatrix.data, config);
+        }
+    </script>
+
+    <script>
+        // Show back button if history is available
+        if (window.history.length > 1) {
+            var backButton = document.createElement("button");
+            backButton.innerText = "Back";
+            backButton.addEventListener("click", function() {
+                window.history.back();
+            });
+            document.body.appendChild(backButton);
+        }
     </script>
 </body>
 </html>
