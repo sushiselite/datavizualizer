@@ -30,34 +30,35 @@ def data_cleaning():
                 encode_categorical = request.form.get('encode_categorical') == 'on'
                 filter_outliers = request.form.get('filter_outliers') == 'on'
 
-                # Handling missing values
+                # Data cleaning operations
                 if handle_missing_values:
-                    df = df.fillna(method='ffill')
+                    df.fillna(method='ffill', inplace=True)
 
-                # Dropping duplicates
                 if drop_duplicates:
-                    df = df.drop_duplicates()
+                    df.drop_duplicates(inplace=True)
 
-                # Normalizing data
                 if normalize_data:
                     min_max_scaler = preprocessing.MinMaxScaler()
-                    df = pd.DataFrame(min_max_scaler.fit_transform(df), columns=df.columns)
+                    df[df.select_dtypes(include=[np.number]).columns] = min_max_scaler.fit_transform(
+                        df.select_dtypes(include=[np.number])
+                    )
 
-                # Encoding categorical values
                 if encode_categorical:
                     df = pd.get_dummies(df)
 
-                # Filtering outliers using Z-score
                 if filter_outliers:
-                    df = df[(np.abs(stats.zscore(df.select_dtypes(include=[np.number]))) < 3).all(axis=1)]
+                    z_scores = stats.zscore(df.select_dtypes(include=[np.number]))
+                    df = df[(np.abs(z_scores) < 3).all(axis=1)]
 
                 # Create a download link for the cleaned data
                 cleaned_data_download_link = f'<a href="/download">Download Cleaned Data</a>'
 
                 return render_template('data_cleaning.html', cleaned_data=df.to_html(index=False), download_link=cleaned_data_download_link)
+
             except Exception as e:
                 error_message = f"Error occurred: {str(e)}"
                 return render_template('data_cleaning.html', error_message=error_message)
+
     return render_template('data_cleaning.html')
 
 @app.route('/data-analysis', methods=['GET', 'POST'])
@@ -79,56 +80,16 @@ def data_analysis():
                 numerical_columns = df.select_dtypes(include=[np.number]).columns
 
                 plot_type = request.form.get('plot_type')
-                if plot_type == 'histogram':
-                    for col in numerical_columns[:2]:
-                        print(f"Generating histogram for {col}")  # Logging
-                        start_time = time.time()
-                        fig = px.histogram(df, x=col)
-                        plot_html = fig.to_html(full_html=False)
-                        plots.append(plot_html)
-                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
-                elif plot_type == 'bar':
-                    for col in numerical_columns[:2]:
-                        print(f"Generating bar chart for {col}")  # Logging
-                        start_time = time.time()
-                        fig = px.bar(df, x=col)
-                        plot_html = fig.to_html(full_html=False)
-                        plots.append(plot_html)
-                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
-                elif plot_type == 'pie':
-                    for col in numerical_columns[:2]:
-                        print(f"Generating pie chart for {col}")  # Logging
-                        start_time = time.time()
-                        fig = px.pie(df, values=col)
-                        plot_html = fig.to_html(full_html=False)
-                        plots.append(plot_html)
-                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
-                elif plot_type == 'scatter':
-                    for col in numerical_columns[:2]:
-                        print(f"Generating scatter plot for {col}")  # Logging
-                        start_time = time.time()
-                        fig = px.scatter(df, x=col, y=numerical_columns[2])
-                        plot_html = fig.to_html(full_html=False)
-                        plots.append(plot_html)
-                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
-                elif plot_type == 'line':
-                    for col in numerical_columns[:2]:
-                        print(f"Generating line graph for {col}")  # Logging
-                        start_time = time.time()
-                        fig = px.line(df, x=col, y=numerical_columns[2])
-                        plot_html = fig.to_html(full_html=False)
-                        plots.append(plot_html)
-                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
-                elif plot_type == 'boxplot':
-                    for col in numerical_columns[:2]:
-                        print(f"Generating boxplot for {col}")  # Logging
-                        start_time = time.time()
-                        fig = px.box(df, y=col)
-                        plot_html = fig.to_html(full_html=False)
-                        plots.append(plot_html)
-                        print(f"Time taken for {col}: {time.time() - start_time} seconds")
+                for col in numerical_columns[:2]:
+                    print(f"Generating {plot_type} for {col}")  # Logging
+                    start_time = time.time()
+                    fig = get_plot(df, plot_type, col)
+                    plot_html = fig.to_html(full_html=False)
+                    plots.append(plot_html)
+                    print(f"Time taken for {col}: {time.time() - start_time} seconds")
 
                 return render_template('data_analysis.html', plots=plots)
+
             except Exception as e:
                 error_message = f"Error occurred during data analysis: {str(e)}"
                 flash(error_message)
@@ -145,6 +106,24 @@ def download():
     response.headers.set('Content-Type', 'text/csv')
     response.headers.set('Content-Disposition', 'attachment', filename='cleaned_data.csv')
     return response
+
+def get_plot(df, plot_type, column):
+    if plot_type == 'histogram':
+        fig = px.histogram(df, x=column)
+    elif plot_type == 'bar':
+        fig = px.bar(df, x=column)
+    elif plot_type == 'pie':
+        fig = px.pie(df, values=column)
+    elif plot_type == 'scatter':
+        fig = px.scatter(df, x=column, y=df.select_dtypes(include=[np.number]).columns[2])
+    elif plot_type == 'line':
+        fig = px.line(df, x=column, y=df.select_dtypes(include=[np.number]).columns[2])
+    elif plot_type == 'boxplot':
+        fig = px.box(df, y=column)
+    else:
+        raise ValueError(f"Invalid plot type: {plot_type}")
+
+    return fig
 
 if __name__ == '__main__':
     app.run(debug=True)
