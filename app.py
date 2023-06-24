@@ -1,13 +1,12 @@
 from flask import Flask, render_template, request, send_file, make_response, flash
 import pandas as pd
-import numpy as np
-from scipy import stats
-import plotly.express as px
 import time
-from sklearn import preprocessing
+from data_cleaning import data_cleaning
+from plotting import plotting
+import numpy as np
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # needed for flashing messages
+app.secret_key = 'supersecretkey'
 df = pd.DataFrame()
 
 @app.route('/')
@@ -15,7 +14,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/data-cleaning', methods=['GET', 'POST'])
-def data_cleaning():
+def data_cleaning_route():
     global df
     if request.method == 'POST':
         file = request.files.get('file')
@@ -32,23 +31,15 @@ def data_cleaning():
 
                 # Data cleaning operations
                 if handle_missing_values:
-                    df.fillna(method='ffill', inplace=True)
-
+                    df = data_cleaning.handle_missing_values(df)
                 if drop_duplicates:
-                    df.drop_duplicates(inplace=True)
-
+                    df = data_cleaning.drop_duplicates(df)
                 if normalize_data:
-                    min_max_scaler = preprocessing.MinMaxScaler()
-                    df[df.select_dtypes(include=[np.number]).columns] = min_max_scaler.fit_transform(
-                        df.select_dtypes(include=[np.number])
-                    )
-
+                    df = data_cleaning.normalize_data(df)
                 if encode_categorical:
-                    df = pd.get_dummies(df)
-
+                    df = data_cleaning.encode_categorical(df)
                 if filter_outliers:
-                    z_scores = stats.zscore(df.select_dtypes(include=[np.number]))
-                    df = df[(np.abs(z_scores) < 3).all(axis=1)]
+                    df = data_cleaning.filter_outliers(df)
 
                 # Create a download link for the cleaned data
                 cleaned_data_download_link = f'<a href="/download">Download Cleaned Data</a>'
@@ -70,15 +61,13 @@ def data_analysis():
                 start_time = time.time()
                 df = pd.read_csv(file.stream)
                 print(f"Time taken to read file: {time.time() - start_time} seconds")
-
                 plots = []
                 numerical_columns = df.select_dtypes(include=[np.number]).columns
-
                 plot_type = request.form.get('plot_type')
                 for col in numerical_columns[:2]:
-                    print(f"Generating {plot_type} for {col}")  # Logging
+                    print(f"Generating {plot_type} for {col}")
                     start_time = time.time()
-                    fig = get_plot(df, plot_type, col)
+                    fig = plotting.get_plot(df, plot_type, col)
                     plot_html = fig.to_html(full_html=False)
                     plots.append(plot_html)
                     print(f"Time taken for {col}: {time.time() - start_time} seconds")
@@ -101,32 +90,6 @@ def download():
     response.headers.set('Content-Type', 'text/csv')
     response.headers.set('Content-Disposition', 'attachment', filename='cleaned_data.csv')
     return response
-
-def get_plot(df, plot_type, column):
-    if plot_type == 'histogram':
-        fig = px.histogram(df, x=column)
-    elif plot_type == 'bar':
-        fig = px.bar(df, x=column)
-    elif plot_type == 'pie':
-        fig = px.pie(df, values=column)
-    elif plot_type == 'scatter':
-        fig = px.scatter(df, x=column, y=df.select_dtypes(include=[np.number]).columns[2])
-    elif plot_type == 'line':
-        fig = px.line(df, x=column, y=df.select_dtypes(include=[np.number]).columns[2])
-    elif plot_type == 'boxplot':
-        fig = px.box(df, y=column)
-    elif plot_type == 'scatter_matrix':
-        fig = px.scatter_matrix(df)
-    elif plot_type == 'area':
-        fig = px.area(df, x=df.index, y=column)
-    elif plot_type == 'stacked_bar':
-        fig = px.bar(df, x=column, y=df.select_dtypes(include=[np.number]).columns[2], 
-                     color=df.select_dtypes(include=[np.number]).columns[3], barmode='stack')
-    else:
-        raise ValueError(f"Invalid plot type: {plot_type}")
-
-    return fig
-
 
 if __name__ == '__main__':
     app.run(debug=True)
