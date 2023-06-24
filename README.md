@@ -1,5 +1,5 @@
 # datavizualizer
-Open source webapp that currently allows users to clean interactively their dataset and generate visuals for their data.
+Open source webapp that currently allows users to interactively clean their dataset and generate visuals for their data. (Limited Functionality)
 
 It currently supports very basic functionality and is a work in progress. Feel free to add suggestions through the 'Issues' tab.
 
