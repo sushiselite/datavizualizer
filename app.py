@@ -115,10 +115,18 @@ def get_plot(df, plot_type, column):
         fig = px.line(df, x=column, y=df.select_dtypes(include=[np.number]).columns[2])
     elif plot_type == 'boxplot':
         fig = px.box(df, y=column)
+    elif plot_type == 'scatter_matrix':
+        fig = px.scatter_matrix(df)
+    elif plot_type == 'area':
+        fig = px.area(df, x=df.index, y=column)
+    elif plot_type == 'stacked_bar':
+        fig = px.bar(df, x=column, y=df.select_dtypes(include=[np.number]).columns[2], 
+                     color=df.select_dtypes(include=[np.number]).columns[3], barmode='stack')
     else:
         raise ValueError(f"Invalid plot type: {plot_type}")
 
     return fig
+
 
 if __name__ == '__main__':
     app.run(debug=True)
