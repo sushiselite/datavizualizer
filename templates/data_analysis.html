@@ -60,6 +60,30 @@
                 {{ plot|safe }}
             </div>
         {% endfor %}
+        
+        {% if summary_stats %}
+            <h2>Summary Statistics</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Statistic</th>
+                        {% for col in summary_stats %}
+                            <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'] %}
+                        <tr>
+                            <td>{{ stat }}</td>
+                            {% for col in summary_stats %}
+                                <td>{{ summary_stats[col][stat] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     {% endif %}
 
     <script>

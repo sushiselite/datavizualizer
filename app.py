@@ -6,7 +6,7 @@ from plotting import plotting
 import numpy as np
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey' #for flash messages
+app.secret_key = 'supersecretkey' 
 df = pd.DataFrame()
 
 @app.route('/')
@@ -61,6 +61,10 @@ def data_analysis():
                 start_time = time.time()
                 df = pd.read_csv(file.stream)
                 print(f"Time taken to read file: {time.time() - start_time} seconds")
+
+                # Calculate summary statistics
+                summary_stats = df.describe().to_dict()
+
                 plots = []
                 numerical_columns = df.select_dtypes(include=[np.number]).columns
                 plot_type = request.form.get('plot_type')
@@ -72,7 +76,7 @@ def data_analysis():
                     plots.append(plot_html)
                     print(f"Time taken for {col}: {time.time() - start_time} seconds")
 
-                return render_template('data_analysis.html', plots=plots)
+                return render_template('data_analysis.html', plots=plots, summary_stats=summary_stats)
 
             except Exception as e:
                 error_message = f"Error occurred during data analysis: {str(e)}"
