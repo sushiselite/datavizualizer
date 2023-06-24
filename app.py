@@ -71,11 +71,6 @@ def data_analysis():
                 df = pd.read_csv(file.stream)
                 print(f"Time taken to read file: {time.time() - start_time} seconds")
 
-                max_rows = 1000
-                if df.shape[0] > max_rows:
-                    flash(f'File is too large, only processing the first {max_rows} rows')
-                    df = df.head(max_rows)
-
                 plots = []
                 numerical_columns = df.select_dtypes(include=[np.number]).columns
 
