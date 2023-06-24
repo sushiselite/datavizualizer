@@ -10,7 +10,7 @@
     <button onclick="window.history.back();">Back</button>
 
     <!-- The form for data cleaning options -->
-    <form action="{{ url_for('data_cleaning') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url_for('data_cleaning_route') }}" method="post" enctype="multipart/form-data">
         <h3>Upload Dataset:</h3>
         <input type="file" name="file" accept=".csv"><br><br>
         
