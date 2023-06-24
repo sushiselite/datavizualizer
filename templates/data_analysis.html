@@ -14,6 +14,8 @@
     </style>
 </head>
 <body>
+    <button onclick="window.history.back();">Back</button>
+
     <h1>Data Analysis</h1>
     
     <!-- Display flash messages -->
@@ -47,6 +49,9 @@
     <p id="loading-message">Uploading and analyzing data, please wait...</p>
 
     {% if plots %}
+        <div>
+            <button onclick="window.history.back();">Back</button>
+        </div>
         {% for plot in plots %}
             <div>
                 {{ plot|safe }}

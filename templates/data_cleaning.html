@@ -7,6 +7,8 @@
 <body>
     <h1>Data Cleaning Options</h1>
     
+    <button onclick="window.history.back();">Back</button>
+
     <!-- The form for data cleaning options -->
     <form action="{{ url_for('data_cleaning') }}" method="post" enctype="multipart/form-data">
         <h3>Upload Dataset:</h3>
@@ -30,13 +32,13 @@
         
         <input type="submit" value="Upload and Clean Data">
     </form>
-    
+
     <!-- The table for cleaned data -->
     {% if cleaned_data %}
         <h3>Cleaned Data:</h3>
-        {{ cleaned_data|safe }}
-        <br>
         {{ download_link|safe }}
+        <br>
+        {{ cleaned_data|safe }}
     {% endif %}
     
     <!-- Display error message if any -->
