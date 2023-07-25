@@ -4,59 +4,21 @@
     <meta charset="UTF-8">
     <title>Data Cleaning</title>
     <style>
-        body {
+        body, h1, ul, li, a, form, p#error-message, table, th, td {
             font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-
-        h1 {
             text-align: center;
+            margin: 40px 0;
             color: #333;
         }
 
-        ul {
+        ul, li, a, input[type="file"], input[type="checkbox"] {
             list-style: none;
             padding: 0;
-            text-align: center;
-            margin-top: 20px;
+            margin: 20px 10px 0;
         }
 
-        li {
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        a {
+        a, input[type="submit"] {
             text-decoration: none;
-            color: #333;
-            padding: 5px 10px;
-            border: 1px solid #333;
-            border-radius: 5px;
-        }
-
-        a:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        form {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        input[type="file"] {
-            margin-bottom: 10px;
-        }
-
-        label {
-            margin-right: 10px;
-        }
-
-        input[type="checkbox"] {
-            margin-bottom: 10px;
-        }
-
-        input[type="submit"] {
             padding: 5px 10px;
             border: 1px solid #333;
             border-radius: 5px;
@@ -64,17 +26,12 @@
             color: #fff;
         }
 
-        input[type="submit"]:hover {
+        a:hover, input[type="submit"]:hover {
             background-color: #666;
-        }
-
-        p#error-message {
-            text-align: center;
-            color: #ff0000;
+            color: #fff;
         }
 
         table {
-            margin-top: 20px;
             border-collapse: collapse;
             width: 100%;
         }
@@ -82,12 +39,10 @@
         th, td {
             border: 1px solid #333;
             padding: 8px;
-            text-align: left;
         }
 
         th {
             background-color: #333;
-            color: #fff;
         }
     </style>
 </head>
@@ -96,31 +51,33 @@
     
     <button onclick="window.history.back();">Back</button>
 
-    <!-- The form for data cleaning options -->
     <form action="{{ url_for('data_cleaning_route') }}" method="post" enctype="multipart/form-data">
         <h3>Upload Dataset:</h3>
         <input type="file" name="file" accept=".csv"><br><br>
         
         <h3>Select Data Cleaning Operations:</h3>
-        <input type="checkbox" id="handle_missing_values" name="handle_missing_values">
-        <label for="handle_missing_values">Handle Missing Values</label><br>
         
-        <input type="checkbox" id="drop_duplicates" name="drop_duplicates">
-        <label for="drop_duplicates">Drop Duplicates</label><br>
+        <div>
+            <input type="checkbox" id="handle_missing_values" name="handle_missing_values">
+            <label for="handle_missing_values">Handle Missing Values</label><br>
+
+            <input type="checkbox" id="drop_duplicates" name="drop_duplicates">
+            <label for="drop_duplicates">Drop Duplicates</label><br>
+
+            <input type="checkbox" id="normalize_data" name="normalize_data">
+            <label for="normalize_data">Normalize Data using MinMax scaler (0-1)</label><br>
+
+            <input type="checkbox" id="encode_categorical" name="encode_categorical">
+            <label for="encode_categorical">Encode Categorical Values</label><br>
+
+            <input type="checkbox" id="filter_outliers" name="filter_outliers">
+            <label for="filter_outliers">Filter Outliers</label><br>
+        </div>
         
-        <input type="checkbox" id="normalize_data" name="normalize_data">
-        <label for="normalize_data">Normalize Data using MinMax scaler (0-1)</label><br>
-        
-        <input type="checkbox" id="encode_categorical" name="encode_categorical">
-        <label for="encode_categorical">Encode Categorical Values</label><br>
-        
-        <input type="checkbox" id="filter_outliers" name="filter_outliers">
-        <label for="filter_outliers">Filter Outliers</label><br>
-        
+        <br>
         <input type="submit" value="Upload and Clean Data">
     </form>
 
-    <!-- The table for cleaned data -->
     {% if cleaned_data %}
         <h3>Cleaned Data:</h3>
         {{ download_link|safe }}
@@ -128,7 +85,6 @@
         {{ cleaned_data|safe }}
     {% endif %}
     
-    <!-- Display error message if any -->
     {% if error_message %}
         <p style="color: red;">{{ error_message }}</p>
     {% endif %}

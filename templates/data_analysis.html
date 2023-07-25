@@ -5,59 +5,21 @@
     <title>Data Analysis</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        body {
+        body, h1, ul, li, a, form, p#error-message, table, th, td {
             font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-
-        h1 {
             text-align: center;
+            margin: 40px 0;
             color: #333;
         }
 
-        ul {
+        ul, li, a, input[type="file"], select {
             list-style: none;
             padding: 0;
-            text-align: center;
-            margin-top: 20px;
+            margin: 20px 10px 0;
         }
 
-        li {
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        a {
+        a, button[type="submit"] {
             text-decoration: none;
-            color: #333;
-            padding: 5px 10px;
-            border: 1px solid #333;
-            border-radius: 5px;
-        }
-
-        a:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        form {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        input[type="file"] {
-            margin-bottom: 10px;
-        }
-
-        label {
-            margin-right: 10px;
-        }
-
-        select {
-            margin-right: 10px;
-        }
-
-        button[type="submit"] {
             padding: 5px 10px;
             border: 1px solid #333;
             border-radius: 5px;
@@ -65,22 +27,12 @@
             color: #fff;
         }
 
-        button[type="submit"]:hover {
+        a:hover, button[type="submit"]:hover {
             background-color: #666;
-        }
-
-        p#error-message {
-            text-align: center;
-            color: #ff0000;
-        }
-
-        #loading-message {
-            text-align: center;
-            display: none;
+            color: #fff;
         }
 
         table {
-            margin-top: 20px;
             border-collapse: collapse;
             width: 100%;
         }
@@ -88,19 +40,20 @@
         th, td {
             border: 1px solid #333;
             padding: 8px;
-            text-align: left;
         }
 
         th {
             background-color: #333;
-            color: #fff;
+        }
+
+        #loading-message {
+            display: none;
         }
     </style>
 </head>
 <body>
     <h1>Data Analysis</h1>
     
-    <!-- Display flash messages -->
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul>
@@ -134,9 +87,7 @@
     <p id="loading-message">Uploading and analyzing data, please wait...</p>
 
     {% if plots %}
-        <div>
-            <button onclick="window.history.back();">Back</button>
-        </div>
+        <button onclick="window.history.back();">Back</button>
         {% for plot in plots %}
             <div>
                 {{ plot|safe }}
@@ -172,9 +123,7 @@
         document.getElementById("upload-form").addEventListener("submit", function() {
             document.getElementById("loading-message").style.display = "block";
         });
-    </script>
 
-    <script>
         // Adjust Plotly scatter matrix configuration
         var scatterMatrix = document.getElementById("scatter-matrix");
         if (scatterMatrix) {
@@ -182,9 +131,7 @@
             config.yaxis.tickangle = -90;
             Plotly.newPlot(scatterMatrix, scatterMatrix.data, config);
         }
-    </script>
 
-    <script>
         // Show back button if history is available
         if (window.history.length > 1) {
             var backButton = document.createElement("button");

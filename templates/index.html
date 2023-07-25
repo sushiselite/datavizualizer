@@ -3,42 +3,30 @@
 <head>
     <title>datavizualizer</title>
     <style>
-        body {
+        body, h1, p, ul, li, a, .gif-container {
             font-family: Arial, sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
+            color: #333;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 90vh; 
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        p {
-            text-align: center;
-            color: #666;
-        }
-
-        ul {
+        ul, li, a {
             list-style: none;
             padding: 0;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        li {
-            display: inline-block;
-            margin-right: 10px;
+            margin: 20px 10px 0;
         }
 
         a {
             text-decoration: none;
-            color: #333;
             padding: 5px 10px;
             border: 1px solid #333;
             border-radius: 5px;
@@ -50,10 +38,6 @@
         }
 
         .gif-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             margin-top: 20px;
         }
 
@@ -64,17 +48,14 @@
 </head>
 <body>
     <h1>Welcome to Datavizualizer</h1>
-    
+    <br>
     <p>This web app allows you to clean and analyze data.</p>
-    
     <ul>
         <li><a href="/data-cleaning">Data Cleaning</a></li>
         <li><a href="/data-analysis">Data Analysis</a></li>
     </ul>
-
     <div class="gif-container">
         <iframe src="https://giphy.com/embed/IoRBXUlynTBL7sy7y8" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
     </div>
-
 </body>
 </html>
